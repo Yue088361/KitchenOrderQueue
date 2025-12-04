@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: kitchen.kitchenQueueTest
+Test set: kitchen.KitchenQueueTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.163 s -- in kitchen.kitchenQueueTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in kitchen.KitchenQueueTest

@@ -10,7 +10,7 @@ public class Order {
         this.status = OrderStatus.NEW; 
     }
 
-    /*public String getId() {
+    public String getId() {
         return id;
     }
 
@@ -20,7 +20,7 @@ public class Order {
     
      public void setStatus(OrderStatus status) {
         this.status = status;
-    }*/
+    }
   
     
     

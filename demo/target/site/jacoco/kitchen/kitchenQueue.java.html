@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>kitchenQueue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">kitchen</a> &gt; <span class="el_source">kitchenQueue.java</span></div><h1>kitchenQueue.java</h1><pre class="source lang-java linenums">package kitchen;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KitchenQueue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">kitchen</a> &gt; <span class="el_source">KitchenQueue.java</span></div><h1>KitchenQueue.java</h1><pre class="source lang-java linenums">package kitchen;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-<span class="fc" id="L7">public class kitchenQueue {</span>
+<span class="fc" id="L7">public class KitchenQueue {</span>
 
 <span class="fc" id="L9">    private List&lt;Order&gt; activeOrders = new ArrayList&lt;&gt;();</span>
     //private final Map&lt;String, Order&gt; orders = new HashMap&lt;&gt;();
@@ -18,18 +18,42 @@ import java.util.List;
 <span class="fc" id="L18">        return Collections.unmodifiableList(activeOrders);</span>
     }
 
-    /*public void markOrderInProgress(String orderId) {
-        Order order = orders.get(orderId);
-        if (order == null) throw new IllegalArgumentException(&quot;Order not found: &quot; + orderId);
-        order.setStatus(OrderStatus.IN_PROGRESS);
-    }
+    public void markOrderInProgress(String orderId) {
+<span class="fc" id="L22">        Order order = findOrderById(orderId);</span>
+<span class="fc" id="L23">        order.setStatus(OrderStatus.IN_PROGRESS);</span>
+<span class="fc" id="L24">    }</span>
 
     public void markOrderComplete(String orderId) {
-        Order order = orders.get(orderId);
-        if (order == null) throw new IllegalArgumentException(&quot;Order not found: &quot; + orderId);
-        order.setStatus(OrderStatus.COMPLETE);
-    }*/
-    
+        Order order = findOrderById(orderId);
+<span class="nc" id="L28">        order.setStatus(OrderStatus.COMPLETE);</span>
+        activeOrders.remove(order); 
+    }
+
+    private Order findOrderById(String orderId) {
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        for (Order order : activeOrders) {</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            if (order.getId().equals(orderId)) {</span>
+<span class="fc" id="L35">                return order;</span>
+            }
+        }
+<span class="nc" id="L38">        throw new IllegalArgumentException(&quot;Order not found: &quot; + orderId);</span>
+    }
+
+public void completeOrder(String orderId) {
+<span class="fc" id="L42">   Order target = null;</span>
+
+
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">    for (Order order : activeOrders) {</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (order.getId().equals(orderId)) {</span>
+<span class="fc" id="L47">            target = order;</span>
+<span class="fc" id="L48">            break;</span>
+        }
+    }
+
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">    if (target != null) {</span>
+<span class="fc" id="L53">        target.setStatus(OrderStatus.COMPLETED);</span>
+<span class="fc" id="L54">        activeOrders.remove(target);</span>
+    }
+<span class="fc" id="L56">}</span>
 }
 
    
