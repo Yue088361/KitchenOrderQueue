@@ -1,4 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 demo,kitchen,Order,0,19,0,0,0,8,0,4,0,4
-demo,kitchen,OrderStatus,0,34,0,0,0,2,0,1,0,1
-demo,kitchen,KitchenQueue,11,80,6,6,2,21,7,6,1,6
+demo,kitchen,FakeNotificationService,0,15,0,0,0,5,0,2,0,2
+demo,kitchen,OrderStatus,0,21,0,0,0,2,0,1,0,1
+demo,kitchen,KitchenQueue,22,113,7,9,7,31,8,9,1,8

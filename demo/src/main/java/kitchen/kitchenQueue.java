@@ -7,7 +7,12 @@ import java.util.List;
 public class KitchenQueue {
 
     private List<Order> activeOrders = new ArrayList<>();
-    //private final Map<String, Order> orders = new HashMap<>();
+    private NotificationService notifier;
+    private List<String> retryQueue = new ArrayList<>();
+
+    public KitchenQueue(NotificationService notifier) {
+        this.notifier = notifier;
+    }
     
     public void receiveNewOrder(Order order) {
         if (order!= null){
@@ -38,22 +43,36 @@ public class KitchenQueue {
         throw new IllegalArgumentException("Order not found: " + orderId);
     }
 
-public void completeOrder(String orderId) {
-   Order target = null;
+    public void completeOrder(String orderId) {
+        Order target = null;
 
 
-    for (Order order : activeOrders) {
+        for (Order order : activeOrders) {
         if (order.getId().equals(orderId)) {
             target = order;
             break;
         }
+        }
+
+        if (target != null) {
+        target.setStatus(OrderStatus.COMPLETE);
+        activeOrders.remove(target);
+        }
     }
 
-    if (target != null) {
-        target.setStatus(OrderStatus.COMPLETED);
-        activeOrders.remove(target);
+    public void orderComplete(String orderId) {
+        Order order = findOrderById(orderId);
+        order.setStatus(OrderStatus.COMPLETE);
+
+        boolean success = notifier.notifyReady(orderId); 
+        if (!success) {
+        retryQueue.add(orderId);
+        }
     }
-}
+    
+    public boolean hasRetries() {
+        return !retryQueue.isEmpty();
+    }
 }
 
    

@@ -4,56 +4,75 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-<span class="fc" id="L7">public class KitchenQueue {</span>
+public class KitchenQueue {
 
 <span class="fc" id="L9">    private List&lt;Order&gt; activeOrders = new ArrayList&lt;&gt;();</span>
-    //private final Map&lt;String, Order&gt; orders = new HashMap&lt;&gt;();
+    private NotificationService notifier;
+<span class="fc" id="L11">    private List&lt;String&gt; retryQueue = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L13">    public KitchenQueue(NotificationService notifier) {</span>
+<span class="fc" id="L14">        this.notifier = notifier;</span>
+<span class="fc" id="L15">    }</span>
     
     public void receiveNewOrder(Order order) {
-<span class="pc bpc" id="L13" title="1 of 2 branches missed.">        if (order!= null){</span>
-<span class="fc" id="L14">        activeOrders.add(order);</span>
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">        if (order!= null){</span>
+<span class="fc" id="L19">        activeOrders.add(order);</span>
         }
-<span class="fc" id="L16">    }</span>
+<span class="fc" id="L21">    }</span>
     public List&lt;Order&gt; getActiveOrders() {
-<span class="fc" id="L18">        return Collections.unmodifiableList(activeOrders);</span>
+<span class="fc" id="L23">        return Collections.unmodifiableList(activeOrders);</span>
     }
 
     public void markOrderInProgress(String orderId) {
-<span class="fc" id="L22">        Order order = findOrderById(orderId);</span>
-<span class="fc" id="L23">        order.setStatus(OrderStatus.IN_PROGRESS);</span>
-<span class="fc" id="L24">    }</span>
+<span class="fc" id="L27">        Order order = findOrderById(orderId);</span>
+<span class="fc" id="L28">        order.setStatus(OrderStatus.IN_PROGRESS);</span>
+<span class="fc" id="L29">    }</span>
 
     public void markOrderComplete(String orderId) {
-        Order order = findOrderById(orderId);
-<span class="nc" id="L28">        order.setStatus(OrderStatus.COMPLETE);</span>
-        activeOrders.remove(order); 
-    }
+<span class="nc" id="L32">        Order order = findOrderById(orderId);</span>
+<span class="nc" id="L33">        order.setStatus(OrderStatus.COMPLETE);</span>
+<span class="nc" id="L34">        activeOrders.remove(order); </span>
+<span class="nc" id="L35">    }</span>
 
     private Order findOrderById(String orderId) {
-<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        for (Order order : activeOrders) {</span>
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            if (order.getId().equals(orderId)) {</span>
-<span class="fc" id="L35">                return order;</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        for (Order order : activeOrders) {</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">            if (order.getId().equals(orderId)) {</span>
+<span class="fc" id="L40">                return order;</span>
             }
+<span class="nc" id="L42">        }</span>
+<span class="nc" id="L43">        throw new IllegalArgumentException(&quot;Order not found: &quot; + orderId);</span>
+    }
+
+    public void completeOrder(String orderId) {
+<span class="fc" id="L47">        Order target = null;</span>
+
+
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        for (Order order : activeOrders) {</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (order.getId().equals(orderId)) {</span>
+<span class="fc" id="L52">            target = order;</span>
+<span class="fc" id="L53">            break;</span>
         }
-<span class="nc" id="L38">        throw new IllegalArgumentException(&quot;Order not found: &quot; + orderId);</span>
-    }
+<span class="nc" id="L55">        }</span>
 
-public void completeOrder(String orderId) {
-<span class="fc" id="L42">   Order target = null;</span>
-
-
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">    for (Order order : activeOrders) {</span>
-<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (order.getId().equals(orderId)) {</span>
-<span class="fc" id="L47">            target = order;</span>
-<span class="fc" id="L48">            break;</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (target != null) {</span>
+<span class="fc" id="L58">        target.setStatus(OrderStatus.COMPLETE);</span>
+<span class="fc" id="L59">        activeOrders.remove(target);</span>
         }
-    }
+<span class="fc" id="L61">    }</span>
 
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">    if (target != null) {</span>
-<span class="fc" id="L53">        target.setStatus(OrderStatus.COMPLETED);</span>
-<span class="fc" id="L54">        activeOrders.remove(target);</span>
+    public void orderComplete(String orderId) {
+<span class="fc" id="L64">        Order order = findOrderById(orderId);</span>
+<span class="fc" id="L65">        order.setStatus(OrderStatus.COMPLETE);</span>
+
+<span class="fc" id="L67">        boolean success = notifier.notifyReady(orderId); </span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!success) {</span>
+<span class="fc" id="L69">        retryQueue.add(orderId);</span>
+        }
+<span class="fc" id="L71">    }</span>
+    
+    public boolean hasRetries() {
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        return !retryQueue.isEmpty();</span>
     }
-<span class="fc" id="L56">}</span>
 }
 
    

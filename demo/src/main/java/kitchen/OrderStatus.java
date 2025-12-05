@@ -2,6 +2,5 @@ package kitchen;
 
 public enum OrderStatus {
 
-    NEW, IN_PROGRESS, COMPLETED;
-    
+    NEW, IN_PROGRESS, COMPLETE;
 }
